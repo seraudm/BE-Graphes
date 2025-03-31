@@ -43,11 +43,13 @@ public class Path {
      * @return A path that goes through the given list of nodes.
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * @deprecated Need to be implemented.
      */
-    public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
-            throws IllegalArgumentException {
+    public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
+
+        if (nodes.size()==1){
+            return new Path(graph,nodes.get(0)); 
+        }
 
         for (int i = 0; i < nodes.size()-1 ; i++){
             Node origin = nodes.get(i);
@@ -56,12 +58,8 @@ public class Path {
             Arc shortestArc = null;
 
             for (Arc arc : successors){
-                if (arc.getDestination().equals(dest)){
-                    if (shortestArc == null){
-                        shortestArc = arc;
-                    } else if(shortestArc.getLength() > arc.getLength()){
-                        shortestArc = arc;
-                    }
+                if (arc.getDestination().equals(dest) && (shortestArc == null || shortestArc.getLength() > arc.getLength())){
+                    shortestArc = arc;
                 }
             }
 
