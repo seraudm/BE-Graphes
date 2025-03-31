@@ -190,8 +190,17 @@ public class Path {
             return true;
         } else if(arcs.isEmpty()){
             return true;
+        } else {
+            Node currOrigin = origin;
+            for (Arc arc :arcs){
+                if (!currOrigin.equals(arc.getOrigin())){
+                    return false;
+                }
+                currOrigin = arc.getDestination();
+            }
+
+            return true;
         }
-        return false;
     }
 
     /**
