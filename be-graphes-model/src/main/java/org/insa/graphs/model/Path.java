@@ -48,7 +48,31 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+
+        for (int i = 0; i < nodes.size()-1 ; i++){
+            Node origin = nodes.get(i);
+            Node dest = nodes.get(i+1);
+            List<Arc> successors = origin.getSuccessors();
+            Arc shortestArc = null;
+
+            for (Arc arc : successors){
+                if (arc.getDestination().equals(dest)){
+                    if (shortestArc == null){
+                        shortestArc = arc;
+                    } else if(shortestArc.getLength() > arc.getLength()){
+                        shortestArc = arc;
+                    }
+                }
+            }
+
+            if (shortestArc == null){
+                throw new IllegalArgumentException();
+            }
+
+            arcs.add(shortestArc);
+
+        }
+
         return new Path(graph, arcs);
     }
 
@@ -209,7 +233,7 @@ public class Path {
      * @return Total length of the path (in meters).
      */
     public float getLength() {
-        float length = 0.0f;
+        float length = 0;
         for (Arc arc : arcs){
             length += arc.getLength();
         }
@@ -224,9 +248,9 @@ public class Path {
      *         kilometers-per-hour).
      */
     public double getTravelTime(double speed) {
-        float duration = 0.0f;
+        double duration = 0;
         for (Arc arc : arcs){
-            duration += arc.getLength() / speed;
+            duration += arc.getLength() / (speed / 3.6);
         }
         return duration;
     }
@@ -238,9 +262,9 @@ public class Path {
      * @return Minimum travel time to travel this path (in seconds).
      */
     public double getMinimumTravelTime() {
-        double duration = 0.0f;
+        double duration = 0;
         for (Arc arc : arcs){
-            duration += arc.getLength() / arc.getRoadInformation().getMaximumSpeed();
+            duration += arc.getLength() / (arc.getRoadInformation().getMaximumSpeed() / 3.6);
         }
         return duration;
     }
