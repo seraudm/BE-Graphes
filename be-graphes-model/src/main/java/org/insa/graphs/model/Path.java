@@ -238,7 +238,7 @@ public class Path {
      * @return Minimum travel time to travel this path (in seconds).
      */
     public double getMinimumTravelTime() {
-        float duration = 0.0f;
+        double duration = 0.0f;
         for (Arc arc : arcs){
             duration += arc.getLength() / arc.getRoadInformation().getMaximumSpeed();
         }
