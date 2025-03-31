@@ -187,7 +187,11 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        // TODO:
+        if (this.isEmpty()){
+            return true;
+        } else if(){
+
+        }
         return false;
     }
 
@@ -211,11 +215,11 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        float duree = 0;
+        float duration = 0;
         for (Arc arc : arcs){
-            duree += arc.getLength() / speed;
+            duration += arc.getLength() / speed;
         }
-        return duree;
+        return duration;
     }
 
     /**
