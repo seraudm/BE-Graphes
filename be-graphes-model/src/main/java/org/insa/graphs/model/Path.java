@@ -248,7 +248,7 @@ public class Path {
     public double getTravelTime(double speed) {
         double duration = 0;
         for (Arc arc : arcs){
-            duration += arc.getLength() / (speed / 3.6);
+            duration += arc.getTravelTime(speed);
         }
         return duration;
     }
@@ -262,7 +262,7 @@ public class Path {
     public double getMinimumTravelTime() {
         double duration = 0;
         for (Arc arc : arcs){
-            duration += arc.getLength() / (arc.getRoadInformation().getMaximumSpeed() / 3.6);
+            duration += arc.getMinimumTravelTime();
         }
         return duration;
     }
