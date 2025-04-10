@@ -1,5 +1,5 @@
 package org.insa.graphs.algorithm.utils;
-
+import java.util.HashMap;
 import java.util.ArrayList;
 
 /**
@@ -17,12 +17,16 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     // The heap array.
     protected final ArrayList<E> array;
 
+    // The HashMap
+    protected final HashMap<E, Integer> dictionary; 
+
     /**
      * Construct a new empty binary heap.
      */
     public BinaryHeap() {
         this.currentSize = 0;
         this.array = new ArrayList<E>();
+        this.dictionary = new HashMap<E, Integer>();
     }
 
     /**
@@ -33,6 +37,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public BinaryHeap(BinaryHeap<E> heap) {
         this.currentSize = heap.currentSize;
         this.array = new ArrayList<E>(heap.array);
+        this.dictionary = new HashMap<E, Integer>(heap.dictionary);
     }
 
     /**
@@ -42,6 +47,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
      * @param value Element to set.
      */
     private void arraySet(int index, E value) {
+        dictionary.put(value, index);
         if (index == this.array.size()) {
             this.array.add(value);
         }
@@ -134,7 +140,21 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
     @Override
     public void remove(E x) throws ElementNotFoundException {
-        // TODO:
+        Integer index = dictionary.get(x);
+        if (index == null){
+            throw new ElementNotFoundException(x);
+        }
+
+        this.currentSize--;
+        E lastItem = this.array.get(this.currentSize);
+        this.arraySet(index, lastItem);
+        dictionary.remove(x);
+        int indexParent = this.indexParent(index);
+        if (index != 0 && lastItem.compareTo(this.array.get(indexParent)) < 0){
+            percolateUp(index);
+        } else {
+            percolateDown(index);
+        }
     }
 
     @Override
@@ -148,8 +168,11 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public E deleteMin() throws EmptyPriorityQueueException {
         E minItem = findMin();
         E lastItem = this.array.get(--this.currentSize);
-        this.arraySet(0, lastItem);
-        this.percolateDown(0);
+        dictionary.remove(minItem);
+        if (currentSize != 0){
+            this.arraySet(0, lastItem);
+            this.percolateDown(0);
+        }
         return minItem;
     }
 
