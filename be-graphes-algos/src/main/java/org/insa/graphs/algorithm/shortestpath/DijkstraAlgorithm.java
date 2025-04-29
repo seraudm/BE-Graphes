@@ -1,9 +1,15 @@
 package org.insa.graphs.algorithm.shortestpath;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
+import org.insa.graphs.algorithm.AbstractSolution.Status;
+import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
+import org.insa.graphs.model.Node;
+import org.insa.graphs.model.Path;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
@@ -21,23 +27,72 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         // variable that will contain the solution of the shortest path problem
         ShortestPathSolution solution = null;
 
-        // TODO: implement the Dijkstra algorithm
-        
+
         Graph graph = data.getGraph();
         final int nbNodes = graph.size();
+        
+        // Initialize array of labels
+        Label[] labelArray = new Label[nbNodes];
+        
+        for (Node node : graph.getNodes()){
+            labelArray[node.getId()] = new Label(node, Double.POSITIVE_INFINITY, null);
+        }
+        
+        Label labelDestination = labelArray[data.getDestination().getId()];
 
-        // Initialize array of distances.
-        double[] distances = new double[nbNodes];
-        Arrays.fill(distances, Double.POSITIVE_INFINITY);
-        distances[data.getOrigin().getId()] = 0;
+        labelArray[data.getOrigin().getId()].setCost(0);
 
+        // Initialize heap of labels.
+        BinaryHeap<Label> labelHeap = new BinaryHeap<Label>();
+
+        for (Label label : labelArray){
+            labelHeap.insert(label);
+        }
+
+        while (!labelDestination.getMark() && !labelHeap.isEmpty()){
+            Label labelMin = labelHeap.deleteMin();
+
+            for (Arc arc: labelMin.getCurrentNode().getSuccessors()){
+                
+                // Small test to check allowed roads...
+                if (!data.isAllowed(arc)) {
+                    continue;
+                }
+
+                Label destinationOfArc = labelArray[arc.getDestination().getId()];
+
+                // Retrieve weight of the arc.
+                double w = data.getCost(arc);
+                double oldDistance = destinationOfArc.getRealisedCost();
+                double newDistance = labelMin.getRealisedCost() + w;
+
+                if (Double.isInfinite(oldDistance)
+                            && Double.isFinite(newDistance)) {
+                        notifyNodeReached(arc.getDestination());
+                    }
+
+                // Check if new distances would be better, if so update...
+                if (newDistance < oldDistance) {
+                    destinationOfArc.setCost(newDistance);
+                    destinationOfArc.setDaddy(arc);
+                    
+                    labelHeap.remove(destinationOfArc);
+                    labelHeap.insert(destinationOfArc);
+                }
+            }
+
+            labelMin.setMark(true);
+        }
+                
         // Notify observers about the first event (origin processed).
         notifyOriginProcessed(data.getOrigin());
+        
+        
+        
 
-        // Initialize array of predecessors.
-        Arc[] predecessorArcs = new Arc[nbNodes];
-
-
+        // Create the final solution.
+        solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
+        
 
         // when the algorithm terminates, return the solution that has been found
         return solution;

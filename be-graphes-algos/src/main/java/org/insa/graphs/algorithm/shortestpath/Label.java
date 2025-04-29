@@ -11,14 +11,14 @@ public class Label implements Comparable<Label> {
     private Arc daddy;
 
 
-    public Label(Node currentNode, boolean mark, double realisedCost, Arc daddy) {
+    public Label(Node currentNode, double realisedCost, Arc daddy) {
         currentNode = this.currentNode;
         mark = false;
         realisedCost = this.realisedCost;
         daddy = this.daddy;
     }
 
-    public Node getNode(){
+    public Node getCurrentNode(){
         return currentNode;
     }
 
@@ -34,17 +34,23 @@ public class Label implements Comparable<Label> {
         return daddy;
     }
 
+    public void setMark(boolean mark){
+        this.mark = mark;
+    }
+
+    public void setCost(double cost){
+        this.realisedCost = cost;
+    }
+
+    public void setDaddy(Arc daddy){
+        this.daddy = daddy;
+    }
+
     public int compareTo(Label label) throws NullPointerException{
         if (label == null){
             throw new NullPointerException("Erreur dans le compare to de label, argument null\n");
         }
         
-        if (this.realisedCost < label.getRealisedCost()){
-            return -1;
-        } else if (this.realisedCost == label.getRealisedCost()){
-            return 0;
-        } else {
-            return 1;
-        }
+        return Double.compare(realisedCost, label.getRealisedCost());
     }
 }
