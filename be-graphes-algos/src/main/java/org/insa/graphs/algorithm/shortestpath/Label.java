@@ -4,7 +4,7 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 
-public class Label {
+public class Label implements Comparable<Label> {
     private Node currentNode;
     private boolean mark;
     private double realisedCost;
@@ -32,5 +32,19 @@ public class Label {
 
     public Arc getDaddy(){
         return daddy;
+    }
+
+    public int compareTo(Label label) throws NullPointerException{
+        if (label == null){
+            throw new NullPointerException("Erreur dans le compare to de label, argument null\n");
+        }
+        
+        if (this.realisedCost < label.getRealisedCost()){
+            return -1;
+        } else if (this.realisedCost == label.getRealisedCost()){
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
