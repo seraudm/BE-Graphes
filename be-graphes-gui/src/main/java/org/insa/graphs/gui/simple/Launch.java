@@ -49,7 +49,7 @@ public class Launch {
         return basicDrawing;
     }
 
-    public static boolean testShortestPathAlgo(int idOrigine, int idDest, String mapName, ArcInspector arcInspector){
+    public static boolean testShortestPathAlgo(int idOrigine, int idDest, String mapName, ArcInspector arcInspector) throws Exception {
         Graph graph;
         Node nodeOrigine, nodeDest;
 
