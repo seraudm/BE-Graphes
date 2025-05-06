@@ -12,10 +12,10 @@ public class Label implements Comparable<Label> {
 
 
     public Label(Node currentNode, double realisedCost, Arc daddy) {
-        currentNode = this.currentNode;
-        mark = false;
-        realisedCost = this.realisedCost;
-        daddy = this.daddy;
+        this.currentNode = currentNode;
+        this.mark = false;
+        this.realisedCost = realisedCost;
+        this.daddy = daddy;
     }
 
     public Node getCurrentNode(){

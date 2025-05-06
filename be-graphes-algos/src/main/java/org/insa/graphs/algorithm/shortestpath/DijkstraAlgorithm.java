@@ -52,7 +52,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         while (!labelDestination.getMark() && !labelHeap.isEmpty()){
             Label labelMin = labelHeap.deleteMin();
-
+            System.out.println(labelMin);
             //If the next node to be marked has an inifinite cost, there is no solution.
             if (Double.isInfinite(labelMin.getRealisedCost())){     
                 return new ShortestPathSolution(data, Status.INFEASIBLE);
