@@ -9,9 +9,15 @@ import java.io.FileInputStream;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.insa.graphs.algorithm.ArcInspector;
+import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathSolution;
 import org.insa.graphs.gui.drawing.Drawing;
 import org.insa.graphs.gui.drawing.components.BasicDrawing;
 import org.insa.graphs.model.Graph;
+import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.model.io.BinaryGraphReader;
 import org.insa.graphs.model.io.BinaryPathReader;
@@ -41,6 +47,33 @@ public class Launch {
             }
         });
         return basicDrawing;
+    }
+
+    public static boolean testShortestPathAlgo(int idOrigine, int idDest, String mapName, ArcInspector arcInspector){
+        Graph graph;
+        Node nodeOrigine, nodeDest;
+
+        // create a graph reader
+        try (final GraphReader reader = new BinaryGraphReader(new DataInputStream(
+                new BufferedInputStream(new FileInputStream(mapName))))) {
+            graph = reader.read();
+        }
+        nodeOrigine = graph.get(idOrigine);
+        nodeDest = graph.get(idDest);
+
+        ShortestPathData data = new ShortestPathData(graph, nodeOrigine, nodeDest, arcInspector);
+
+        DijkstraAlgorithm dijkstraAlgorithm;
+        dijkstraAlgorithm = new DijkstraAlgorithm(data);
+        
+        BellmanFordAlgorithm bellmanFordAlgorithm;
+        bellmanFordAlgorithm = new BellmanFordAlgorithm(data);
+
+        ShortestPathSolution solutionDijkstra, solutionBellman;
+        solutionDijkstra = dijkstraAlgorithm.run();
+        solutionBellman = bellmanFordAlgorithm.run();
+
+        return true;
     }
 
     public static void main(String[] args) throws Exception {
