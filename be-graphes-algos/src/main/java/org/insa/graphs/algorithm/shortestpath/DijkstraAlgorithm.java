@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
+import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
@@ -40,15 +41,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         
         Label labelDestination = labelArray[data.getDestination().getId()];
+        Label labelOrigin = labelArray[data.getOrigin().getId()];
 
-        labelArray[data.getOrigin().getId()].setCost(0);
+
+        labelOrigin.setCost(0);
 
         // Initialize heap of labels.
         BinaryHeap<Label> labelHeap = new BinaryHeap<Label>();
 
-        for (Label label : labelArray){
-            labelHeap.insert(label);
-        }
+        labelHeap.insert(labelOrigin);
 
         while (!labelDestination.getMark() && !labelHeap.isEmpty()){
             Label labelMin = labelHeap.deleteMin();
@@ -82,7 +83,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                     destinationOfArc.setCost(newDistance);
                     destinationOfArc.setDaddy(arc);
                     
-                    labelHeap.remove(destinationOfArc);
+                    try {
+                        labelHeap.remove(destinationOfArc);
+                    } catch (ElementNotFoundException e) {
+                        /* We just catch the exception so it doesn't stop the execution and do nothing with it. 
+                        It's not a problem, that means the element isn't in the heap yet, the next instruction will insert it*/
+                    }
                     labelHeap.insert(destinationOfArc);
                 }
             }
