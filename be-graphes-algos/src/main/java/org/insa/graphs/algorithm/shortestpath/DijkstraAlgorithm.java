@@ -1,9 +1,7 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.model.Arc;
@@ -31,6 +29,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Graph graph = data.getGraph();
         final int nbNodes = graph.size();
         
+        // Notify observers about the first event (origin processed).
+        notifyOriginProcessed(data.getOrigin());
+
         // Initialize array of labels
         Label[] labelArray = new Label[nbNodes];
         
@@ -51,6 +52,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         while (!labelDestination.getMark() && !labelHeap.isEmpty()){
             Label labelMin = labelHeap.deleteMin();
+
+            //If the next node to be marked has an inifinite cost, there is no solution.
+            if (Double.isInfinite(labelMin.getRealisedCost())){     
+                return new ShortestPathSolution(data, Status.INFEASIBLE);
+            }
 
             for (Arc arc: labelMin.getCurrentNode().getSuccessors()){
                 
@@ -84,15 +90,24 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             labelMin.setMark(true);
         }
                 
-        // Notify observers about the first event (origin processed).
-        notifyOriginProcessed(data.getOrigin());
         
-        
-        
+        // The destination has been found, notify the observers.
+        notifyDestinationReached(data.getDestination());
 
-        // Create the final solution.
-        solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
-        
+         // Create the path from the array of predecessors...
+         ArrayList<Arc> arcs = new ArrayList<>();
+         Arc arc = labelArray[data.getDestination().getId()].getDaddy();
+         while (arc != null) {
+             arcs.add(arc);
+             arc = labelArray[arc.getOrigin().getId()].getDaddy();
+         }
+
+         // Reverse the path...
+         Collections.reverse(arcs);
+
+         // Create the final solution.
+         solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
+
 
         // when the algorithm terminates, return the solution that has been found
         return solution;
