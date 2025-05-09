@@ -57,7 +57,7 @@ public class ArcInspectorFactory {
         }
     };
 
-    private static class OnlyCarsByTimeArcInspector
+    private static class NoFilterByTimeArcInspector
             extends NoFilterByLengthArcInspector {
 
         @Override
@@ -73,6 +73,25 @@ public class ArcInspectorFactory {
         @Override
         public String toString() {
             return "Fastest path, all roads allowed";
+        }
+    };
+
+    private static class OnlyCarsByTimeArcInspector
+            extends OnlyCarsByLengthArcInspector {
+
+        @Override
+        public double getCost(Arc arc) {
+            return arc.getMinimumTravelTime();
+        }
+
+        @Override
+        public Mode getMode() {
+            return Mode.TIME;
+        }
+
+        @Override
+        public String toString() {
+            return "Fastest path, only roads open for cars";
         }
     };
 
@@ -117,8 +136,8 @@ public class ArcInspectorFactory {
         // Add your own filters here (do not forget to implement toString()
         // to get an understandable output!):
         return Arrays.asList(new NoFilterByLengthArcInspector(),
-                new OnlyCarsByLengthArcInspector(), new OnlyCarsByTimeArcInspector(),
-                new OnlyPedestrianByTime());
+                new OnlyCarsByLengthArcInspector(), new NoFilterByTimeArcInspector(),
+                new OnlyPedestrianByTime(), new OnlyCarsByTimeArcInspector());
     }
 
 }
