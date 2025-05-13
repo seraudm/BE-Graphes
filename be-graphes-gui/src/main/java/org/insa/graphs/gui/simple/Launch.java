@@ -73,42 +73,66 @@ public class Launch {
         solutionDijkstra = dijkstraAlgorithm.run();
         solutionBellman = bellmanFordAlgorithm.run();
 
+        if(!solutionBellman.isFeasible() && !solutionDijkstra.isFeasible()){
+            return true;
+        }
+
+        if(solutionBellman.isFeasible() != solutionDijkstra.isFeasible()){
+            return false;
+        }
+
+        Path pathDijkstra = solutionDijkstra.getPath();
+        Path pathBellman = solutionBellman.getPath();
+
+
+        if(pathDijkstra.getOrigin() != nodeOrigine || pathDijkstra.getDestination() != nodeDest){
+            return false;
+        }
+        
+        if(!pathDijkstra.isValid()){
+            return false;
+        }
+
+        if ((data.getCost(pathDijkstra) - data.getCost(pathBellman)) > 1/1000){
+            return false;
+        }
+        
         return true;
     }
 
     public static void main(String[] args) throws Exception {
 
-        // visit these directory to see the list of available files on commetud.
-        final String mapName =
-                "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
-        final String pathName =
-                "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31insa_rangueil_r2.path";
+        // // visit these directory to see the list of available files on commetud.
+        // final String mapName =
+        //         "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        // final String pathName =
+        //         "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31insa_rangueil_r2.path";
 
-        final Graph graph;
-        final Path path;
+        // final Graph graph;
+        // final Path path;
 
-        // create a graph reader
-        try (final GraphReader reader = new BinaryGraphReader(new DataInputStream(
-                new BufferedInputStream(new FileInputStream(mapName))))) {
-            graph = reader.read();
-        }
+        // // create a graph reader
+        // try (final GraphReader reader = new BinaryGraphReader(new DataInputStream(
+        //         new BufferedInputStream(new FileInputStream(mapName))))) {
+        //     graph = reader.read();
+        // }
 
-        // create the drawing
-        final Drawing drawing = createDrawing();
+        // // create the drawing
+        // final Drawing drawing = createDrawing();
 
-        drawing.drawGraph(graph);
+        // drawing.drawGraph(graph);
 
-        //create a path reader
+        // //create a path reader
 
-        try (final PathReader pathReader = new BinaryPathReader(new DataInputStream(
-            new BufferedInputStream(new FileInputStream(pathName))))) {
+        // try (final PathReader pathReader = new BinaryPathReader(new DataInputStream(
+        //     new BufferedInputStream(new FileInputStream(pathName))))) {
             
-            //read the path
-            path = pathReader.readPath(graph);
-        }
+        //     //read the path
+        //     path = pathReader.readPath(graph);
+        // }
 
-        //draw the path on the drawing
-        drawing.drawPath(path);
+        // //draw the path on the drawing
+        // drawing.drawPath(path);
     }
 
 }

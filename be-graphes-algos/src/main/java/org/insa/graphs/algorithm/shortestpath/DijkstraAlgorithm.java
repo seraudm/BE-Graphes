@@ -95,7 +95,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             labelMin.setMark(true);
         }
-                
+        
+        double costPath = 0;
         
         // The destination has been found, notify the observers.
         notifyDestinationReached(data.getDestination());
@@ -105,11 +106,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
          Arc arc = labelArray[data.getDestination().getId()].getDaddy();
          while (arc != null) {
              arcs.add(arc);
+             costPath += data.getCost(arc);
              arc = labelArray[arc.getOrigin().getId()].getDaddy();
          }
 
          // Reverse the path...
          Collections.reverse(arcs);
+
+         assert ((labelDestination.getRealisedCost() - costPath)<= 1/1000);
 
          // Create the final solution.
          solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));

@@ -1,5 +1,7 @@
 package org.insa.graphs.algorithm;
 
+import org.insa.graphs.model.Path;
+
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.GraphStatistics;
@@ -54,6 +56,14 @@ public abstract class AbstractInputData {
      */
     public double getCost(Arc arc) {
         return this.arcInspector.getCost(arc);
+    }
+
+    public double getCost(Path path) {
+        double cost = 0;
+        for (Arc arc : path.getArcs()){
+            cost += getCost(arc);
+        }
+        return cost;
     }
 
     /**
