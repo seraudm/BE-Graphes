@@ -57,11 +57,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         while (!labelDestination.getMark() && !labelHeap.isEmpty()){
             Label labelMin = labelHeap.deleteMin();
-            System.out.println(labelMin);
-            //If the next node to be marked has an inifinite cost, there is no solution.
-            if (Double.isInfinite(labelMin.getRealisedCost())){     
-                return new ShortestPathSolution(data, Status.INFEASIBLE);
-            }
 
             for (Arc arc: labelMin.getCurrentNode().getSuccessors()){
                 
@@ -108,19 +103,25 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
          // Create the path from the array of predecessors...
          ArrayList<Arc> arcs = new ArrayList<>();
          Arc arc = labelArray[data.getDestination().getId()].getDaddy();
-         while (arc != null) {
-             arcs.add(arc);
-             costPath += data.getCost(arc);
-             arc = labelArray[arc.getOrigin().getId()].getDaddy();
+
+         // Destination has no predecessor, the solution is infeasible...
+         if (arc== null){
+            solution =  new ShortestPathSolution(data, Status.INFEASIBLE);
+         } else {
+             while (arc != null) {
+                 arcs.add(arc);
+                 costPath += data.getCost(arc);
+                 arc = labelArray[arc.getOrigin().getId()].getDaddy();
+             }
+    
+             // Reverse the path...
+             Collections.reverse(arcs);
+    
+             assert ((labelDestination.getRealisedCost() - costPath)<= 1/1000);
+    
+             // Create the final solution.
+             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
          }
-
-         // Reverse the path...
-         Collections.reverse(arcs);
-
-         assert ((labelDestination.getRealisedCost() - costPath)<= 1/1000);
-
-         // Create the final solution.
-         solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
 
 
         // when the algorithm terminates, return the solution that has been found

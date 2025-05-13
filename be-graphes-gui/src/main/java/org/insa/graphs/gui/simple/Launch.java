@@ -80,13 +80,20 @@ public class Launch {
         }
 
         if(solutionBellman.isFeasible() != solutionDijkstra.isFeasible()){
+            System.err.println("Bellman"+solutionBellman.isFeasible()+" Dijkstra: "+solutionDijkstra.isFeasible());
             return false;
         }
 
         Path pathDijkstra = solutionDijkstra.getPath();
         Path pathBellman = solutionBellman.getPath();
 
-        if(pathDijkstra.getOrigin() != nodeOrigine || pathDijkstra.getDestination() != nodeDest){
+
+
+        if(pathDijkstra.getOrigin() != nodeOrigine){
+            return false;
+        }
+
+        if(!pathDijkstra.getArcs().isEmpty() && pathDijkstra.getDestination() != nodeDest){
             return false;
         }
         
@@ -111,7 +118,8 @@ public class Launch {
 
     public static void main(String[] args) throws Exception {
 
-        final String mapNameMP = "/home/verdeil/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/midi-pyrenees.mapgr";
+        // final String mapNameMP = "/home/verdeil/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/midi-pyrenees.mapgr";
+        final String mapNameMP = "C:\\Users\\maels\\OneDrive\\Documents\\INSA\\BE_Graphes\\BE-Graphes-Git-Folder\\Maps\\toulouse\\europe\\france\\midi-pyrenees.mapgr";
         List<ArcInspector> listArcInspector = ArcInspectorFactory.getAllFilters();
         ArcInspector shortestNoFilter = listArcInspector.get(0);
         ArcInspector shortestOnlyCars = listArcInspector.get(1);
@@ -119,11 +127,11 @@ public class Launch {
         ArcInspector fastestPedestrian = listArcInspector.get(3);
         ArcInspector fastestOnlyCars = listArcInspector.get(4);
         System.out.println("Début des tests");
-        // myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestOnlyCars));
-        // myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian));
+        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestOnlyCars));
+        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian));
         myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter));
-        // myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter));
-        // myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestOnlyCars));
+        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter));
+        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestOnlyCars));
         System.out.println("Fin des tests: OK");
 
         // // visit these directory to see the list of available files on commetud.
