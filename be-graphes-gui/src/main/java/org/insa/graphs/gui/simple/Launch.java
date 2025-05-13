@@ -5,11 +5,13 @@ import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.insa.graphs.algorithm.ArcInspector;
+import org.insa.graphs.algorithm.ArcInspectorFactory;
 import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
@@ -68,7 +70,7 @@ public class Launch {
         
         BellmanFordAlgorithm bellmanFordAlgorithm;
         bellmanFordAlgorithm = new BellmanFordAlgorithm(data);
-
+        
         ShortestPathSolution solutionDijkstra, solutionBellman;
         solutionDijkstra = dijkstraAlgorithm.run();
         solutionBellman = bellmanFordAlgorithm.run();
@@ -84,7 +86,6 @@ public class Launch {
         Path pathDijkstra = solutionDijkstra.getPath();
         Path pathBellman = solutionBellman.getPath();
 
-
         if(pathDijkstra.getOrigin() != nodeOrigine || pathDijkstra.getDestination() != nodeDest){
             return false;
         }
@@ -97,10 +98,33 @@ public class Launch {
             return false;
         }
         
+
         return true;
     }
 
+    public static void myAssert(boolean b) throws AssertionError{
+        if (!b){
+            throw new AssertionError();
+        }
+        System.out.println("OK");
+    }
+
     public static void main(String[] args) throws Exception {
+
+        final String mapNameMP = "/home/verdeil/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/midi-pyrenees.mapgr";
+        List<ArcInspector> listArcInspector = ArcInspectorFactory.getAllFilters();
+        ArcInspector shortestNoFilter = listArcInspector.get(0);
+        ArcInspector shortestOnlyCars = listArcInspector.get(1);
+        ArcInspector fastestNoFilter = listArcInspector.get(2);
+        ArcInspector fastestPedestrian = listArcInspector.get(3);
+        ArcInspector fastestOnlyCars = listArcInspector.get(4);
+        System.out.println("Début des tests");
+        // myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestOnlyCars));
+        // myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian));
+        myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter));
+        // myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter));
+        // myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestOnlyCars));
+        System.out.println("Fin des tests: OK");
 
         // // visit these directory to see the list of available files on commetud.
         // final String mapName =

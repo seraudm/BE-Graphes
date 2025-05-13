@@ -33,6 +33,10 @@ public class BellmanFordAlgorithm extends ShortestPathAlgorithm {
         // Notify observers about the first event (origin processed).
         notifyOriginProcessed(data.getOrigin());
 
+        if (data.getDestination() == data.getOrigin()){
+            return new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, data.getOrigin()));
+        }
+
         // Initialize array of predecessors.
         Arc[] predecessorArcs = new Arc[nbNodes];
 
