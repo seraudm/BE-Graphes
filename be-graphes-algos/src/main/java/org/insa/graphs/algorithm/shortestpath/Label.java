@@ -46,11 +46,21 @@ public class Label implements Comparable<Label> {
         this.daddy = daddy;
     }
 
+    public Double getTotalCost(){
+        return this.realisedCost;
+    }
+
     public int compareTo(Label label) throws NullPointerException{
         if (label == null){
             throw new NullPointerException("Erreur dans le compare to de label, argument null\n");
         }
-        
-        return Double.compare(realisedCost, label.getRealisedCost());
+
+        int result = Double.compare(this.getTotalCost(), label.getTotalCost());
+
+        if (result == 0 && this instanceof LabelStar && label instanceof LabelStar){
+            return Double.compare(((LabelStar) this).getEstimatedCost(), ((LabelStar) label).getEstimatedCost());
+        }
+
+        return result;
     }
 }
