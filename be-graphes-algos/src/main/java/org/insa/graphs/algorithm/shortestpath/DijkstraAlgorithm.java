@@ -42,7 +42,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         for (Node node : graph.getNodes()){
             if (this instanceof AStarAlgorithm){
-                labelArray[node.getId()] = new LabelStar(node, Double.POSITIVE_INFINITY, null, data.getDestination());
+                labelArray[node.getId()] = new LabelStar(node, Double.POSITIVE_INFINITY, null, data.getDestination(), data);
             } else {
                 labelArray[node.getId()] = new Label(node, Double.POSITIVE_INFINITY, null);
             }

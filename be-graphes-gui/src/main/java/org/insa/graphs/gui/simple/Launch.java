@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import org.insa.graphs.algorithm.ArcInspector;
 import org.insa.graphs.algorithm.ArcInspectorFactory;
+import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
@@ -51,7 +52,7 @@ public class Launch {
         return basicDrawing;
     }
 
-    public static boolean testShortestPathAlgo(int idOrigine, int idDest, String mapName, ArcInspector arcInspector) throws Exception {
+    public static boolean testShortestPathAlgo(int idOrigine, int idDest, String mapName, ArcInspector arcInspector, boolean isAStar) throws Exception {
         Graph graph;
         Node nodeOrigine, nodeDest;
 
@@ -66,7 +67,11 @@ public class Launch {
         ShortestPathData data = new ShortestPathData(graph, nodeOrigine, nodeDest, arcInspector);
 
         DijkstraAlgorithm dijkstraAlgorithm;
-        dijkstraAlgorithm = new DijkstraAlgorithm(data);
+        if (isAStar){
+            dijkstraAlgorithm = new AStarAlgorithm(data);
+        } else {
+            dijkstraAlgorithm = new DijkstraAlgorithm(data);
+        }
         
         BellmanFordAlgorithm bellmanFordAlgorithm;
         bellmanFordAlgorithm = new BellmanFordAlgorithm(data);
@@ -126,12 +131,15 @@ public class Launch {
         ArcInspector fastestNoFilter = listArcInspector.get(2);
         ArcInspector fastestPedestrian = listArcInspector.get(3);
         ArcInspector fastestOnlyCars = listArcInspector.get(4);
+
+        boolean isAStar = true;
+
         System.out.println("Début des tests");
-        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestOnlyCars));
-        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian));
-        myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter));
-        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter));
-        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestOnlyCars));
+        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestNoFilter, isAStar));
+        myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter, isAStar));
+        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian, isAStar));
+        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter, isAStar));
+        myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestOnlyCars, isAStar));
         System.out.println("Fin des tests: OK");
 
         // // visit these directory to see the list of available files on commetud.
