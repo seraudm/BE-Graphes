@@ -44,15 +44,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         // Initialize array of labels
         Label[] labelArray = new Label[nbNodes];
         
-        for (Node node : graph.getNodes()){
-            labelArray[node.getId()] = getLabelUsed(node, Double.POSITIVE_INFINITY, null, data);
-        }
+
         
-        Label labelDestination = labelArray[data.getDestination().getId()];
-        Label labelOrigin = labelArray[data.getOrigin().getId()];
+        Label labelOrigin = getLabelUsed(data.getOrigin(), 0, null, data);
+        labelArray[data.getOrigin().getId()] = labelOrigin;
+
+        Label labelDestination = getLabelUsed(data.getDestination(), Double.POSITIVE_INFINITY, null, data);
+        labelArray[data.getDestination().getId()] = labelDestination;
 
 
-        labelOrigin.setCost(0);
 
         // Initialize heap of labels.
         BinaryHeap<Label> labelHeap = new BinaryHeap<Label>();
@@ -70,6 +70,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
 
                 Label destinationOfArc = labelArray[arc.getDestination().getId()];
+                if (destinationOfArc == null){
+                    destinationOfArc = getLabelUsed(arc.getDestination(), Double.POSITIVE_INFINITY, null, data);
+                    labelArray[arc.getDestination().getId()] = destinationOfArc;
+                }
 
                 // Retrieve weight of the arc.
                 double w = data.getCost(arc);
