@@ -132,9 +132,10 @@ public class Launch {
         ArcInspector fastestPedestrian = listArcInspector.get(3);
         ArcInspector fastestOnlyCars = listArcInspector.get(4);
 
-        boolean isAStar = true;
+        boolean isAStar = false;
 
         System.out.println("Début des tests");
+        myAssert(testShortestPathAlgo(404734, 281104, mapNameMP, shortestNoFilter, isAStar));
         myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestNoFilter, isAStar));
         myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter, isAStar));
         myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian, isAStar));

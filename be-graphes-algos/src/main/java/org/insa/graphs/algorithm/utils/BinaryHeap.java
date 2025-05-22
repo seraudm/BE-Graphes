@@ -146,9 +146,12 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         }
 
         this.currentSize--;
+        dictionary.remove(x);
+        if (index == currentSize){
+            return;
+        } //we are removing the last item so we don't need to do anything
         E lastItem = this.array.get(this.currentSize);
         this.arraySet(index, lastItem);
-        dictionary.remove(x);
         int indexParent = this.indexParent(index);
         if (index != 0 && lastItem.compareTo(this.array.get(indexParent)) < 0){
             percolateUp(index);

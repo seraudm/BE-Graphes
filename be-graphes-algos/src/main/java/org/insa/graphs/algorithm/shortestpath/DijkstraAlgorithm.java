@@ -98,7 +98,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             labelMin.setMark(true);
         }
-        
         double costPath = 0;
         
         // The destination has been found, notify the observers.
