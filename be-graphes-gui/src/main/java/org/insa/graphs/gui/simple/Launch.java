@@ -136,7 +136,7 @@ public class Launch {
 
         System.out.println("Début des tests");
         myAssert(testShortestPathAlgo(404734, 281104, mapNameMP, shortestNoFilter, isAStar));
-        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestNoFilter, isAStar));
+        myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestOnlyCars, isAStar));
         myAssert(testShortestPathAlgo(13120, 13120, mapNameMP, fastestNoFilter, isAStar));
         myAssert(testShortestPathAlgo(13120, 120842, mapNameMP, fastestPedestrian, isAStar));
         myAssert(testShortestPathAlgo(13120, 67032, mapNameMP, shortestNoFilter, isAStar));

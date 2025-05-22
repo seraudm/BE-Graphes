@@ -16,6 +16,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         super(data);
     }
 
+    protected Label getLabelUsed(Node currentNode, double realisedCost, Arc daddy, ShortestPathData data){
+        return new Label(currentNode, realisedCost, daddy);
+    }
+
     @Override
     protected ShortestPathSolution doRun() {
 
@@ -41,11 +45,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Label[] labelArray = new Label[nbNodes];
         
         for (Node node : graph.getNodes()){
-            if (this instanceof AStarAlgorithm){
-                labelArray[node.getId()] = new LabelStar(node, Double.POSITIVE_INFINITY, null, data.getDestination(), data);
-            } else {
-                labelArray[node.getId()] = new Label(node, Double.POSITIVE_INFINITY, null);
-            }
+            labelArray[node.getId()] = getLabelUsed(node, Double.POSITIVE_INFINITY, null, data);
         }
         
         Label labelDestination = labelArray[data.getDestination().getId()];

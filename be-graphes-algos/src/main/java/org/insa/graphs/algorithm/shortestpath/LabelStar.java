@@ -8,8 +8,9 @@ import org.insa.graphs.model.Point;
 public class LabelStar extends Label{
     private Double estimatedCost;
 
-    public LabelStar(Node currentNode, double realisedCost, Arc daddy, Node destNode, ShortestPathData data){
+    public LabelStar(Node currentNode, double realisedCost, Arc daddy, ShortestPathData data){
         super(currentNode, realisedCost, daddy);
+        Node destNode = data.getDestination();
         Point currentPoint = currentNode.getPoint();
         Point destPoint = destNode.getPoint();
         Double distanceToDest = currentPoint.distanceTo(destPoint);
