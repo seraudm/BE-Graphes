@@ -22,7 +22,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     @Override
     protected ShortestPathSolution doRun() {
-
+        int nbNodesReached = 2;
         // retrieve data from the input problem (getInputData() is inherited from the
         // parent class ShortestPathAlgorithm)
         final ShortestPathData data = getInputData();
@@ -71,6 +71,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
                 Label destinationOfArc = labelArray[arc.getDestination().getId()];
                 if (destinationOfArc == null){
+                    nbNodesReached++;
                     destinationOfArc = getLabelUsed(arc.getDestination(), Double.POSITIVE_INFINITY, null, data);
                     labelArray[arc.getDestination().getId()] = destinationOfArc;
                 }
@@ -110,6 +111,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
          // Create the path from the array of predecessors...
          ArrayList<Arc> arcs = new ArrayList<>();
          Arc arc = labelArray[data.getDestination().getId()].getDaddy();
+
+        System.out.println("Nombre de noeuds parcourus:" + nbNodesReached);
 
          // Destination has no predecessor, the solution is infeasible...
          if (arc== null){
